@@ -1,0 +1,108 @@
+# Project 1: Navigation
+
+## Introduction
+
+For this project, an agent is trained to naviate a large, square world with the goal of collecting bananas.
+
+A reward of +1 is provided for collecting a yellow banana, and a reward of -1 is provided for collecting a blue banana.
+Thus, the goal of the agent is to collect as many yellow bananas as possible while avoiding blue bananas.
+
+The state space has 37 dimensions and contains the agent's velocity, along with ray-based perception of objects around
+agent's forward direction.  Given this information, the agent has to learn how to best select actions.  Four discrete
+actions are available, corresponding to:
+- **`0`** - move forward.
+- **`1`** - move backward.
+- **`2`** - turn left.
+- **`3`** - turn right.
+
+The task is episodic, and in order to solve the environment, the agent must get an average score of +13 over 100
+consecutive episodes.
+
+## Installation
+
+After checking out the repository and navigating to this project's root folder, a simple setup script is provided that
+will install of the required Python dependencies, as well as downloading and unzipping the Banana environment from
+Udacity itself. As a pre-requisite, Python 3 must be installed on your system.
+
+```
+$ python3 setup.py
+```
+
+Once this script successfully executes, it should be possible to immediately run the application as described below.
+
+
+## User Instructions
+
+The main application for running the agent in the environment is executed using the Python script
+`banana_navigation.py`.
+
+```
+$ python3 banana_navigation.py
+```
+
+By default, running the applicatino without any parameters will run the application in inference mode with the DQN
+weights loaded from `weights.ptn`. A single episode of the environment is run with the final score being output on the
+console.
+
+To run the application in headless mode, i.e. without the visualization, use the `--headless` argument.
+
+```
+$ python3 banana_navigation.py --headless
+```
+
+To see all possible options for the application, run the help command:
+
+```
+$ python3 banana_navigation.py --help
+```
+
+### Inference Mode
+
+The default mode of the application is to do a single episode of the environment in inference mode, which simply runs
+the environment with the currently trained agent. By default, the neural network weights from the file `weights.ptn`
+are loaded. If this file does not exist, the neural network are simply initialized to random values.
+
+The following command can be used to specify your own neural network parameters, which is useful for seeing the
+inference performance of differently trained networks.
+
+```
+$ python3 banana_navigation.py --load_parameters /path/to/parameters/weights.ptn
+```
+
+### Training Mode
+
+In order to train a new agent, the training mode of the application must be activated by running with the following
+command:
+
+```
+$ python3 banana_navigation.py --mode train
+```
+
+This will train a basic Deep Q-Network to solve the banana environment and save the weights to the file `weights.ptn`
+once an average score of 13 over 100 episode is reached.
+
+### Manual Mode
+
+Want to know how well you match up with the artificial intelligence agent? Then try out manual mode, where you can have
+a go at collecting some bananas in the environment yourself. In order to launch manual mode, run the application with
+the following command:
+
+```
+$ python3 banana_navigation.py --mode manual
+```
+
+The following commands can be used to control the agent:
+- **`W`** - move forward. (Note: when playing the game, the agent will move forward, if you don't select a different
+            action in time, so you can also think of this action as the "do nothing" action.)
+- **`S`** - move backward.
+- **`A`** - turn left.
+- **`D`** - turn right.
+
+Note that the manual mode will not run when running the application in headless mode.
+
+Good Luck!
+
+## Results
+
+For detailed results on how this environment was solved using various Deep Q-Learning methods, please refer to the
+[Project Report](report.md).
