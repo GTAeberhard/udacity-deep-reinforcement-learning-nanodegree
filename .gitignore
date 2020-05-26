@@ -3,3 +3,4 @@
 Project_Navigation/environment/Banana_Linux*
 **/runs
 *.code-workspace
+**/unityagents.egg-info

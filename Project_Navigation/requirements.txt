@@ -15,3 +15,4 @@ ipykernel
 pynput
 tensorboard-pytorch
 mlagents
+requests

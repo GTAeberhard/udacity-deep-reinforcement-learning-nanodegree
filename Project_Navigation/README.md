@@ -21,11 +21,13 @@ consecutive episodes.
 ## Installation
 
 After checking out the repository and navigating to this project's root folder, a simple setup script is provided that
-will install of the required Python dependencies, as well as downloading and unzipping the Banana environment from
-Udacity itself. As a pre-requisite, Python 3 must be installed on your system.
+will install of the required Python dependencies and a download script that will fetch the Unity Banana environments
+from Udacity. As a pre-requisite, Python 3 must be installed on your system.
 
 ```
-$ python3 setup.py
+$ pip install -e .
+$ cd environment
+$ python download_environment.py
 ```
 
 Once this script successfully executes, it should be possible to immediately run the application as described below.
@@ -37,7 +39,7 @@ The main application for running the agent in the environment is executed using 
 `banana_navigation.py`.
 
 ```
-$ python3 banana_navigation.py
+$ python banana_navigation.py
 ```
 
 By default, running the applicatino without any parameters will run the application in inference mode with the DQN
@@ -47,13 +49,13 @@ console.
 To run the application in headless mode, i.e. without the visualization, use the `--headless` argument.
 
 ```
-$ python3 banana_navigation.py --headless
+$ python banana_navigation.py --headless
 ```
 
 To see all possible options for the application, run the help command:
 
 ```
-$ python3 banana_navigation.py --help
+$ python banana_navigation.py --help
 ```
 
 ### Inference Mode
@@ -66,7 +68,7 @@ The following command can be used to specify your own neural network parameters,
 inference performance of differently trained networks.
 
 ```
-$ python3 banana_navigation.py --load_parameters /path/to/parameters/weights.ptn
+$ python banana_navigation.py --load_parameters /path/to/parameters/weights.ptn
 ```
 
 ### Training Mode
@@ -75,7 +77,7 @@ In order to train a new agent, the training mode of the application must be acti
 command:
 
 ```
-$ python3 banana_navigation.py --mode train
+$ python banana_navigation.py --mode train
 ```
 
 This will train a basic Deep Q-Network to solve the banana environment and save the weights to the file `weights.ptn`
@@ -88,7 +90,7 @@ a go at collecting some bananas in the environment yourself. In order to launch 
 the following command:
 
 ```
-$ python3 banana_navigation.py --mode manual
+$ python banana_navigation.py --mode manual
 ```
 
 The following commands can be used to control the agent:

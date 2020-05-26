@@ -1,0 +1,37 @@
+language: python
+
+python:
+  - 3.5
+
+services:
+  - xvfb
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - libstdc++6
+
+before_install:
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install -U protobuf
+
+install:
+  - pip install -e Project_Navigation
+
+script:
+  - cd Project_Navigation/environment
+  - python download_environment.py
+  - chmod +x Banana_Linux/Banana.x86
+  - chmod +x Banana_Linux/Banana.x86_64
+  - chmod +x Banana_Linux_NoVis/Banana.x86
+  - chmod +x Banana_Linux_NoVis/Banana.x86_64
+  - cd ..
+  - pytest
+
+notifications:
+  email: false

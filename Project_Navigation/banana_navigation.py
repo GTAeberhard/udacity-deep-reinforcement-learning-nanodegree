@@ -14,21 +14,31 @@ SCORING_WINDOW = 100
 
 
 class BananaNavigation:
-    def __init__(self, mode="inference", double_dqn=False, headless=False):
+    def __init__(self, mode="inference", double_dqn=False, headless=False, device=None):
         assert(mode == "inference" or mode == "train" or mode == "manual")
 
         self.training_mode = True if mode == "train" else False
 
         self.env = BananaEnvironment(training_mode=self.training_mode, headless=headless)
 
+        if device == "cuda":
+            self.device = torch.device("cuda:0")
+        elif device == "cpu":
+            self.device = torch.device("cpu")
+        else:
+            self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
         if mode == "manual":
             self.agent = HumanAgent()
         else:
             self.agent = DqnAgent(state_size=self.env.state_size, action_size=self.env.action_size, seed=0,
-                                  double_dqn=double_dqn)
+                                  double_dqn=double_dqn, device=self.device)
 
     def load_weights(self, weights_file="weights.pth"):
-        self.agent.qnetwork_local.load_state_dict(torch.load(weights_file))
+        if self.device.type == "cpu":
+            self.agent.qnetwork_local.load_state_dict(torch.load(weights_file, map_location="cpu"))
+        else:
+            self.agent.qnetwork_local.load_state_dict(torch.load(weights_file))
 
     def play_episode(self):
         state = self.env.reset()
