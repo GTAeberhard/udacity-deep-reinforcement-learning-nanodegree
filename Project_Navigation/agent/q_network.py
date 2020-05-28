@@ -2,11 +2,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from agent.hyperparameters import DNN_ARCHITECTURE
+
 
 class QNetwork(nn.Module):
     """Actor (Policy) Model."""
 
-    def __init__(self, state_size, action_size, seed, hidden_layers=[64, 64]):
+    def __init__(self, state_size, action_size, seed, hidden_layers=DNN_ARCHITECTURE):
         """Initialize parameters and build model.
         Params
         ======

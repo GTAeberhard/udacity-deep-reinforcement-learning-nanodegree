@@ -7,14 +7,14 @@ from tensorboardX import SummaryWriter
 from environment.banana_environmet import BananaEnvironment
 from agent.dqn_agent import DqnAgent
 from agent.human_agent import HumanAgent
-
+from agent.hyperparameters import INITIAL_BETA, BETA_STEPS
 
 N_EPISODES_TRAINING = 1000
 SCORING_WINDOW = 100
 
 
 class BananaNavigation:
-    def __init__(self, mode="inference", double_dqn=False, headless=False, device=None):
+    def __init__(self, mode="inference", double_dqn=False, priority_replay=False, headless=False, device=None):
         assert(mode == "inference" or mode == "train" or mode == "manual")
 
         self.training_mode = True if mode == "train" else False
@@ -32,7 +32,7 @@ class BananaNavigation:
             self.agent = HumanAgent()
         else:
             self.agent = DqnAgent(state_size=self.env.state_size, action_size=self.env.action_size, seed=0,
-                                  double_dqn=double_dqn, device=self.device)
+                                  double_dqn=double_dqn, priority_replay=priority_replay, device=self.device)
 
     def load_weights(self, weights_file="weights.pth"):
         if self.device.type == "cpu":
@@ -40,16 +40,16 @@ class BananaNavigation:
         else:
             self.agent.qnetwork_local.load_state_dict(torch.load(weights_file))
 
-    def play_episode(self):
+    def play_episode(self, eps=0.0, beta=1.0):
         state = self.env.reset()
         score = 0
 
         while True:
-            action = self.agent.act(state)
+            action = self.agent.act(state, eps)
             next_state, reward, done = self.env.step(action)
 
             if self.training_mode:
-                self.agent.step(state, action, reward, next_state, done)
+                self.agent.step(state, action, reward, next_state, done, beta)
 
             score += reward
             state = next_state
@@ -60,15 +60,17 @@ class BananaNavigation:
     def train_agent(self, num_episodes=N_EPISODES_TRAINING, output_weights_file="weights.pth"):
         scores = []
         eps = 1.0
+        beta = INITIAL_BETA
 
         writer = SummaryWriter()
 
         for i_episode in range(1, num_episodes + 1):
-            score = self.play_episode()
+            score = self.play_episode(eps, beta)
 
             scores.append(score)
 
             eps = max(0.01, 0.995*eps)
+            beta = min(1.0, ((1 - INITIAL_BETA) / BETA_STEPS) * i_episode + INITIAL_BETA)
 
             writer.add_scalar("Score", score, i_episode)
             writer.add_scalar("Mean_Score", np.mean(scores[-SCORING_WINDOW:]), i_episode)
@@ -94,10 +96,13 @@ if __name__ == "__main__":
                              "mode, several episodes will be run to train a new Deep Q-Network and save its resulting "
                              "weights. In manual mode, the keyboard can be used to control the agent manually with the "
                              "folling commands: (w) Up, (s) Down, (a) Right, (d) Left.")
+    parser.add_argument("-s", "--save_parameters", default="weights.pth",
+                        help="Path to file where the parameters from training the agent should be saved to.")
     parser.add_argument("-l", "--load_parameters", help="Load the agent with the given parameters/weights for the "
                         "neural network.")
-    parser.add_argument("-o", "--options", nargs="*", help="Specfiy additional options which extend the basic DQN "
-                        "algorithm. Possible options: double: Double DQN")
+    parser.add_argument("-o", "--options", nargs="*", choices=["double", "priority_replay"],
+                        help="Specfiy additional options which extend the basic DQN algorithm. Possible options: "
+                             "double (Double DQN), priority_replay (Priority Replay Buffer)")
     parser.add_argument("--headless", action="store_true", help="Run the application in headless mode, i.e. "
                         "disable the visualization. This option will not work with manual mode.")
     args = parser.parse_args()
@@ -107,14 +112,19 @@ if __name__ == "__main__":
                            "anything?).")
 
     double_dqn = True if args.options is not None and "double" in args.options else False
+    priority_replay = True if args.options is not None and "priority_replay" in args.options else False
 
-    banana_navigation = BananaNavigation(mode=args.mode, double_dqn=double_dqn, headless=args.headless)
+    print("Double DQN: {}".format(double_dqn))
+    print("Priority Replay: {}".format(priority_replay))
+
+    banana_navigation = BananaNavigation(mode=args.mode, double_dqn=double_dqn, priority_replay=priority_replay,
+                                         headless=args.headless)
 
     if not args.mode == "manual" and args.load_parameters:
         banana_navigation.load_weights(args.load_parameters)
 
     if args.mode == "train":
-        banana_navigation.train_agent(num_episodes=N_EPISODES_TRAINING)
+        banana_navigation.train_agent(num_episodes=N_EPISODES_TRAINING, output_weights_file=args.save_parameters)
     else:
         score = banana_navigation.play_episode()
         if score >= 15:

@@ -30,8 +30,9 @@ $ cd environment
 $ python download_environment.py
 ```
 
-Once this script successfully executes, it should be possible to immediately run the application as described below.
-
+Once these scripts successfully execute, it should be possible to immediately run the application as described below.
+Note that it is recommended to setup a `virtualenv` environment for this project so that only the required dependencies
+are installed and your system's Python setup remains untouched.
 
 ## User Instructions
 
@@ -43,7 +44,7 @@ $ python banana_navigation.py
 ```
 
 By default, running the applicatino without any parameters will run the application in inference mode with the DQN
-weights loaded from `weights.ptn`. A single episode of the environment is run with the final score being output on the
+weights loaded from `weights.pth`. A single episode of the environment is run with the final score being output on the
 console.
 
 To run the application in headless mode, i.e. without the visualization, use the `--headless` argument.
@@ -61,7 +62,7 @@ $ python banana_navigation.py --help
 ### Inference Mode
 
 The default mode of the application is to do a single episode of the environment in inference mode, which simply runs
-the environment with the currently trained agent. By default, the neural network weights from the file `weights.ptn`
+the environment with the currently trained agent. By default, the neural network weights from the file `weights.pth`
 are loaded. If this file does not exist, the neural network are simply initialized to random values.
 
 The following command can be used to specify your own neural network parameters, which is useful for seeing the
@@ -80,8 +81,19 @@ command:
 $ python banana_navigation.py --mode train
 ```
 
-This will train a basic Deep Q-Network to solve the banana environment and save the weights to the file `weights.ptn`
+This will train a basic Deep Q-Network to solve the banana environment and save the weights to the file `weights.pth`
 once an average score of 13 over 100 episode is reached.
+
+The `-o` option can be used to activate different extensions to the basic DQN algorithm. For example, in order to train
+a model using Double Q-Learning and prioritized experience replay, run the following:
+
+```
+$ python banana_navigation.py --mode train -o double prioritzed_replay
+```
+
+Currently supported extensions:
+* [Double Q-Learning](https://arxiv.org/abs/1509.06461)
+* [Prioritzed Replay](https://arxiv.org/abs/1511.05952)
 
 ### Manual Mode
 
