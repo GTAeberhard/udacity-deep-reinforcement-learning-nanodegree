@@ -8,7 +8,7 @@ from agent.hyperparameters import DNN_ARCHITECTURE
 class QNetwork(nn.Module):
     """Actor (Policy) Model."""
 
-    def __init__(self, state_size, action_size, seed, hidden_layers=DNN_ARCHITECTURE):
+    def __init__(self, state_size, action_size, seed, hidden_layers=DNN_ARCHITECTURE, dueling=False):
         """Initialize parameters and build model.
         Params
         ======
@@ -19,6 +19,7 @@ class QNetwork(nn.Module):
         """
         super(QNetwork, self).__init__()
         self.seed = torch.manual_seed(seed)
+        self.dueling = dueling
 
         assert(len(hidden_layers) > 0), "Must specify at least a single hidden layer for the neutral network."
 
@@ -32,11 +33,20 @@ class QNetwork(nn.Module):
         self.hidden_layers = nn.ModuleList(self.hidden_layers)
 
         # Output layer
-        self.output_layer = nn.Linear(hidden_layers[-1], action_size)
+        if self.dueling:
+            self.output_value_layer = nn.Linear(hidden_layers[-1], 1)
+            self.output_advantage_layer = nn.Linear(hidden_layers[-1], action_size)
+        else:
+            self.output_layer = nn.Linear(hidden_layers[-1], action_size)
 
     def forward(self, state):
         """Build a network that maps state -> action values."""
         x = F.relu(self.input_layer(state))
         for hidden_layer in self.hidden_layers:
             x = F.relu(hidden_layer(x))
-        return self.output_layer(x)
+        if self.dueling:
+            value = self.output_value_layer(x)
+            advantage = self.output_advantage_layer(x)
+            return value + advantage - advantage.mean()
+        else:
+            return self.output_layer(x)

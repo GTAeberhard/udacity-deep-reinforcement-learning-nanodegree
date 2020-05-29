@@ -14,7 +14,8 @@ from agent.replay_buffers import ReplayBuffer, PriorityReplayBuffer
 class DqnAgent():
     """Interacts with and learns from the environment."""
 
-    def __init__(self, state_size, action_size, seed, double_dqn=False, priority_replay=False, device=None):
+    def __init__(self, state_size, action_size, seed, double_dqn=False, priority_replay=False, dueling_dqn=False,
+                 device=None):
         """Initialize an Agent object.
 
         Params

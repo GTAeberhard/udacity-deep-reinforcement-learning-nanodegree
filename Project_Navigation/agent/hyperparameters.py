@@ -1,4 +1,4 @@
-DNN_ARCHITECTURE = [64, 32]
+DNN_ARCHITECTURE = [64, 64]
 
 BUFFER_SIZE = int(1e5)  # replay buffer size
 BATCH_SIZE = 64         # minibatch size

@@ -14,7 +14,8 @@ SCORING_WINDOW = 100
 
 
 class BananaNavigation:
-    def __init__(self, mode="inference", double_dqn=False, priority_replay=False, headless=False, device=None):
+    def __init__(self, mode="inference", double_dqn=False, priority_replay=False, dueling_dqn=False, headless=False,
+                 device=None):
         assert(mode == "inference" or mode == "train" or mode == "manual")
 
         self.training_mode = True if mode == "train" else False
@@ -32,7 +33,8 @@ class BananaNavigation:
             self.agent = HumanAgent()
         else:
             self.agent = DqnAgent(state_size=self.env.state_size, action_size=self.env.action_size, seed=0,
-                                  double_dqn=double_dqn, priority_replay=priority_replay, device=self.device)
+                                  double_dqn=double_dqn, priority_replay=priority_replay, dueling_dqn=dueling_dqn,
+                                  device=self.device)
 
     def load_weights(self, weights_file="weights.pth"):
         if self.device.type == "cpu":
@@ -100,7 +102,7 @@ if __name__ == "__main__":
                         help="Path to file where the parameters from training the agent should be saved to.")
     parser.add_argument("-l", "--load_parameters", help="Load the agent with the given parameters/weights for the "
                         "neural network.")
-    parser.add_argument("-o", "--options", nargs="*", choices=["double", "priority_replay"],
+    parser.add_argument("-o", "--options", nargs="*", choices=["double", "priority_replay", "dueling"],
                         help="Specfiy additional options which extend the basic DQN algorithm. Possible options: "
                              "double (Double DQN), priority_replay (Priority Replay Buffer)")
     parser.add_argument("--headless", action="store_true", help="Run the application in headless mode, i.e. "
@@ -113,12 +115,13 @@ if __name__ == "__main__":
 
     double_dqn = True if args.options is not None and "double" in args.options else False
     priority_replay = True if args.options is not None and "priority_replay" in args.options else False
+    dueling_dqn = True if args.options is not None and "dueling" in args.options else False
 
     print("Double DQN: {}".format(double_dqn))
     print("Priority Replay: {}".format(priority_replay))
 
     banana_navigation = BananaNavigation(mode=args.mode, double_dqn=double_dqn, priority_replay=priority_replay,
-                                         headless=args.headless)
+                                         dueling_dqn=dueling_dqn, headless=args.headless)
 
     if not args.mode == "manual" and args.load_parameters:
         banana_navigation.load_weights(args.load_parameters)
