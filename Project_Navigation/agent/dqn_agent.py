@@ -5,10 +5,10 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
-from agent.hyperparameters import BUFFER_SIZE, BATCH_SIZE, LEARNING_RATE, GAMMA, TAU, UPDATE_EVERY
+from .hyperparameters import BUFFER_SIZE, BATCH_SIZE, LEARNING_RATE, GAMMA, TAU, UPDATE_EVERY, ALPHA
 
-from agent.q_network import QNetwork
-from agent.replay_buffers import ReplayBuffer, PriorityReplayBuffer
+from .q_network import QNetwork
+from .replay_buffers import ReplayBuffer, PriorityReplayBuffer
 
 
 class DqnAgent():

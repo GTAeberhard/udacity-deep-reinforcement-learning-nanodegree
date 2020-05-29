@@ -21,18 +21,16 @@ consecutive episodes.
 ## Installation
 
 After checking out the repository and navigating to this project's root folder, a simple setup script is provided that
-will install of the required Python dependencies and a download script that will fetch the Unity Banana environments
+will install of the required Python dependencies and download the required Unity Banana environments
 from Udacity. As a pre-requisite, Python 3 must be installed on your system.
 
 ```
 $ pip install -e .
-$ cd environment
-$ python download_environment.py
 ```
 
-Once these scripts successfully execute, it should be possible to immediately run the application as described below.
-Note that it is recommended to setup a `virtualenv` environment for this project so that only the required dependencies
-are installed and your system's Python setup remains untouched.
+Once this command executes, it should be possible to immediately run the application as described below.
+Note that it is recommended to setup a [`virtualenv`](https://docs.python-guide.org/dev/virtualenvs/) environment for
+this project so that only the required dependencies are installed and your system's Python setup remains untouched.
 
 ## User Instructions
 
@@ -43,7 +41,7 @@ The main application for running the agent in the environment is executed using 
 $ python banana_navigation.py
 ```
 
-By default, running the applicatino without any parameters will run the application in inference mode with the DQN
+By default, running the application without any parameters will run the application in inference mode with the DQN
 weights loaded from `weights.pth`. A single episode of the environment is run with the final score being output on the
 console.
 
@@ -82,18 +80,30 @@ $ python banana_navigation.py --mode train
 ```
 
 This will train a basic Deep Q-Network to solve the banana environment and save the weights to the file `weights.pth`
-once an average score of 13 over 100 episode is reached.
+once an average score of 13 over 100 episode is reached.  The `--save_parameters` command can be used to specify your
+own output file name for the trained weights.
 
 The `-o` option can be used to activate different extensions to the basic DQN algorithm. For example, in order to train
 a model using Double Q-Learning and prioritized experience replay, run the following:
 
 ```
-$ python banana_navigation.py --mode train -o double prioritzed_replay
+$ python banana_navigation.py --mode train -o double prioritzed_replay dueling
 ```
 
 Currently supported extensions:
 * [Double Q-Learning](https://arxiv.org/abs/1509.06461)
-* [Prioritzed Replay](https://arxiv.org/abs/1511.05952)
+* [Dueling Deep Q-Network](https://arxiv.org/abs/1511.06581)
+* [Prioritzed Experience Replay](https://arxiv.org/abs/1511.05952)
+
+In order to see the training results (during and after training), the episode scores as well as the mean score over
+the last 100 episodes is published to a TensorBoard compatible log directory. In order to view the results on
+TensorBoard, run
+
+```
+$ tensorboard --logdir runs
+```
+
+In order to specficy a custom name for the TensorBoard run, use the `--name` option.
 
 ### Manual Mode
 
@@ -112,7 +122,7 @@ The following commands can be used to control the agent:
 - **`A`** - turn left.
 - **`D`** - turn right.
 
-Note that the manual mode will not run when running the application in headless mode.
+Note that the manual mode will not run when running the application is in headless mode.
 
 Good Luck!
 
@@ -120,3 +130,7 @@ Good Luck!
 
 For detailed results on how this environment was solved using various Deep Q-Learning methods, please refer to the
 [Project Report](report.md).
+
+Note that the starting point for the implementation in this repository, the base DQN implementation from the
+Udacity Deep Reinforcement Learning Nanodegree exercises were used, in particular the exercise for solving the Lunar
+Lander environment, which can be found [here](https://github.com/udacity/deep-reinforcement-learning/tree/master/dqn).

@@ -7,9 +7,10 @@ from tensorboardX import SummaryWriter
 from environment.banana_environmet import BananaEnvironment
 from agent.dqn_agent import DqnAgent
 from agent.human_agent import HumanAgent
+from agent.q_network import QNetwork
 from agent.hyperparameters import INITIAL_BETA, BETA_STEPS
 
-N_EPISODES_TRAINING = 1000
+DEFAULT_N_EPISODES_TRAINING = 1000
 SCORING_WINDOW = 100
 
 
@@ -59,7 +60,7 @@ class BananaNavigation:
             if done:
                 return score
 
-    def train_agent(self, num_episodes=N_EPISODES_TRAINING, output_weights_file="weights.pth", name=None):
+    def train_agent(self, num_episodes=DEFAULT_N_EPISODES_TRAINING, output_weights_file="weights.pth", name=None):
         scores = []
         eps = 1.0
         beta = INITIAL_BETA
@@ -112,10 +113,12 @@ if __name__ == "__main__":
     parser.add_argument("--name", type=str, default=None,
                         help="A name for the current training run which will be passed to the TensorBoard "
                              "SummaryWriter.")
+    parser.add_argument("--episodes", type=int, default=DEFAULT_N_EPISODES_TRAINING,
+                        help="Number of episodes to run during training. Default = 1000.")
     args = parser.parse_args()
 
     if args.mode == "manual" and args.headless:
-        raise RuntimeError("Cannot run the manual and headless mode simultaneously (how else are you suppose to see "
+        raise RuntimeError("Cannot run manual and headless mode simultaneously (how else are you suppose to see "
                            "anything?).")
 
     double_dqn = True if args.options is not None and "double" in args.options else False
@@ -123,6 +126,7 @@ if __name__ == "__main__":
     dueling_dqn = True if args.options is not None and "dueling" in args.options else False
 
     print("Double DQN: {}".format(double_dqn))
+    print("Dueling DQN: {}".format(dueling_dqn))
     print("Priority Replay: {}".format(priority_replay))
 
     banana_navigation = BananaNavigation(mode=args.mode, double_dqn=double_dqn, priority_replay=priority_replay,
@@ -132,7 +136,7 @@ if __name__ == "__main__":
         banana_navigation.load_weights(args.load_parameters)
 
     if args.mode == "train":
-        banana_navigation.train_agent(num_episodes=N_EPISODES_TRAINING, output_weights_file=args.save_parameters,
+        banana_navigation.train_agent(num_episodes=args.episodes, output_weights_file=args.save_parameters,
                                       name=args.name)
     else:
         score = banana_navigation.play_episode()

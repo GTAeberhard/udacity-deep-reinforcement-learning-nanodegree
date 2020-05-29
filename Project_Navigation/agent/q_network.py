@@ -8,7 +8,7 @@ from agent.hyperparameters import DNN_ARCHITECTURE
 class QNetwork(nn.Module):
     """Actor (Policy) Model."""
 
-    def __init__(self, state_size, action_size, seed, hidden_layers=DNN_ARCHITECTURE, dueling=False):
+    def __init__(self, state_size, action_size, seed=0, hidden_layers=DNN_ARCHITECTURE, dueling=False):
         """Initialize parameters and build model.
         Params
         ======
