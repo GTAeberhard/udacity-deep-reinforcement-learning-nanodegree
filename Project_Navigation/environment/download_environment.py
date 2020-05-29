@@ -10,6 +10,7 @@ def download_and_extract_zip(url):
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall()
 
+
 def set_execute_permissions(file):
     st = os.stat(file)
     os.chmod(file, st.st_mode | stat.S_IEXEC)

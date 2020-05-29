@@ -59,12 +59,13 @@ class BananaNavigation:
             if done:
                 return score
 
-    def train_agent(self, num_episodes=N_EPISODES_TRAINING, output_weights_file="weights.pth"):
+    def train_agent(self, num_episodes=N_EPISODES_TRAINING, output_weights_file="weights.pth", name=None):
         scores = []
         eps = 1.0
         beta = INITIAL_BETA
+        environment_solved = False
 
-        writer = SummaryWriter()
+        writer = SummaryWriter("runs/{}".format(name) if name else None)
 
         for i_episode in range(1, num_episodes + 1):
             score = self.play_episode(eps, beta)
@@ -77,13 +78,14 @@ class BananaNavigation:
             writer.add_scalar("Score", score, i_episode)
             writer.add_scalar("Mean_Score", np.mean(scores[-SCORING_WINDOW:]), i_episode)
 
-            if np.mean(scores[-SCORING_WINDOW:]) >= 13:
+            if np.mean(scores[-SCORING_WINDOW:]) >= 13 and not environment_solved:
                 print("Environment solved in {} episodes!".format(i_episode))
-                torch.save(self.agent.qnetwork_local.state_dict(), output_weights_file)
-                break
+                environment_solved = True
 
             if i_episode % SCORING_WINDOW == 0:
                 print("Episode {} -- Average Score: {}".format(i_episode, np.mean(scores[-SCORING_WINDOW:])))
+
+        torch.save(self.agent.qnetwork_local.state_dict(), output_weights_file)
 
 
 if __name__ == "__main__":
@@ -98,15 +100,18 @@ if __name__ == "__main__":
                              "mode, several episodes will be run to train a new Deep Q-Network and save its resulting "
                              "weights. In manual mode, the keyboard can be used to control the agent manually with the "
                              "folling commands: (w) Up, (s) Down, (a) Right, (d) Left.")
-    parser.add_argument("-s", "--save_parameters", default="weights.pth",
+    parser.add_argument("-s", "--save_parameters", type=str, default="weights.pth",
                         help="Path to file where the parameters from training the agent should be saved to.")
     parser.add_argument("-l", "--load_parameters", help="Load the agent with the given parameters/weights for the "
                         "neural network.")
-    parser.add_argument("-o", "--options", nargs="*", choices=["double", "priority_replay", "dueling"],
+    parser.add_argument("-o", "--options", nargs="*", type=str, choices=["double", "priority_replay", "dueling"],
                         help="Specfiy additional options which extend the basic DQN algorithm. Possible options: "
                              "double (Double DQN), priority_replay (Priority Replay Buffer)")
     parser.add_argument("--headless", action="store_true", help="Run the application in headless mode, i.e. "
                         "disable the visualization. This option will not work with manual mode.")
+    parser.add_argument("--name", type=str, default=None,
+                        help="A name for the current training run which will be passed to the TensorBoard "
+                             "SummaryWriter.")
     args = parser.parse_args()
 
     if args.mode == "manual" and args.headless:
@@ -127,7 +132,8 @@ if __name__ == "__main__":
         banana_navigation.load_weights(args.load_parameters)
 
     if args.mode == "train":
-        banana_navigation.train_agent(num_episodes=N_EPISODES_TRAINING, output_weights_file=args.save_parameters)
+        banana_navigation.train_agent(num_episodes=N_EPISODES_TRAINING, output_weights_file=args.save_parameters,
+                                      name=args.name)
     else:
         score = banana_navigation.play_episode()
         if score >= 15:
