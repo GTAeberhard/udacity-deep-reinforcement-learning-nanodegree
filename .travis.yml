@@ -24,9 +24,7 @@ install:
   - pip install -e Project_Navigation
 
 script:
-  - cd Project_Navigation/environment
-  - python download_environment.py
-  - cd ..
+  - cd Project_Navigation
   - pytest
 
 notifications:
