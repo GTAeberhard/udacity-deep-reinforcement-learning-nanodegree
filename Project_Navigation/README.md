@@ -129,7 +129,7 @@ Good Luck!
 ## Results
 
 For detailed results on how this environment was solved using various Deep Q-Learning methods, please refer to the
-[Project Report](report.md).
+[Project Report](Report.md).
 
 Note that the starting point for the implementation in this repository, the base DQN implementation from the
 Udacity Deep Reinforcement Learning Nanodegree exercises were used, in particular the exercise for solving the Lunar
