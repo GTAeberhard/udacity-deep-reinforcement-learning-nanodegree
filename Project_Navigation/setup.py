@@ -29,11 +29,17 @@ def download_banana_environment():
     download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux_NoVis.zip",
                              "environment")
     assert(os.path.isdir("environment/Banana_Linux_NoVis"))
+    download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Linux.zip",
+                             "environment")
+    os.rename("environment/VisualBanana_Linux", "environment/Banana_Linux_Pixels")
+    assert(os.path.isdir("environment/Banana_Linux_Pixels"))
 
     set_execute_permissions("environment/Banana_Linux/Banana.x86")
     set_execute_permissions("environment/Banana_Linux/Banana.x86_64")
     set_execute_permissions("environment/Banana_Linux_NoVis/Banana.x86")
     set_execute_permissions("environment/Banana_Linux_NoVis/Banana.x86_64")
+    set_execute_permissions("environment/Banana_Linux_Pixels/Banana.x86")
+    set_execute_permissions("environment/Banana_Linux_Pixels/Banana.x86_64")
 
 
 class CustomInstallCommand(install):
