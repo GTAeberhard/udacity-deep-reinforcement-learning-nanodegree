@@ -1,4 +1,5 @@
 import argparse
+import os
 import torch
 import numpy as np
 from collections import deque
@@ -37,7 +38,10 @@ class BananaNavigation:
                                   double_dqn=double_dqn, priority_replay=priority_replay, dueling_dqn=dueling_dqn,
                                   device=self.device)
 
-    def load_weights(self, weights_file="weights.pth"):
+    def close(self):
+        self.env.close()
+
+    def load_weights(self, weights_file):
         if self.device.type == "cpu":
             self.agent.qnetwork_local.load_state_dict(torch.load(weights_file, map_location="cpu"))
         else:
@@ -101,10 +105,11 @@ if __name__ == "__main__":
                              "mode, several episodes will be run to train a new Deep Q-Network and save its resulting "
                              "weights. In manual mode, the keyboard can be used to control the agent manually with the "
                              "folling commands: (w) Up, (s) Down, (a) Right, (d) Left.")
-    parser.add_argument("-s", "--save_parameters", type=str, default="weights.pth",
+    default_weights = os.path.join(os.path.dirname(os.path.realpath(__file__)), "weights.pth")
+    parser.add_argument("-s", "--save_parameters", type=str, default=default_weights,
                         help="Path to file where the parameters from training the agent should be saved to.")
-    parser.add_argument("-l", "--load_parameters", help="Load the agent with the given parameters/weights for the "
-                        "neural network.")
+    parser.add_argument("-l", "--load_parameters", default=default_weights,
+                        help="Load the agent with the given parameters/weights for the neural network.")
     parser.add_argument("-o", "--options", nargs="*", type=str, choices=["double", "priority_replay", "dueling"],
                         help="Specfiy additional options which extend the basic DQN algorithm. Possible options: "
                              "double (Double DQN), priority_replay (Priority Replay Buffer)")
@@ -150,3 +155,6 @@ if __name__ == "__main__":
         else:
             print("\nEverything OK? Why aren't you moving? You know you should be going after the YELLOW bananas, "
                   "right? I am a bit disappointed in you...\n\nScore: {}".format(score))
+
+    banana_navigation.close()
+    

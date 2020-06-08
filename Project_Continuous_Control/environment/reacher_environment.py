@@ -2,12 +2,13 @@ import os
 from unityagents import UnityEnvironment
 
 
-class BananaEnvironment:
-    def __init__(self, training_mode=False, headless=False):
+class ReacherEnvironment:
+    def __init__(self, training_mode=False, multiagent=False, headless=False):
         headless_suffix = "_NoVis" if headless else ""
+        agent_type = "MultiAgent" if multiagent else "SingleAgent"
         root_path = os.path.dirname(os.path.realpath(__file__))
-        self.env = UnityEnvironment(
-            os.path.join(root_path, "Banana_Linux{}/Banana.x86_64".format(headless_suffix))
+        self.env = UnityEnvironment(os.path.join(
+            root_path, "Reacher{}_Linux{}/Reacher.x86_64".format(agent_type, headless_suffix))
         )
 
         self.brain_name = self.env.brain_names[0]

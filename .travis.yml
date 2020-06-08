@@ -22,9 +22,9 @@ before_install:
 
 install:
   - pip install -e Project_Navigation
+  - pip install -e Project_Continuous_Control
 
 script:
-  - cd Project_Navigation
   - pytest
 
 notifications:
