@@ -1,7 +1,7 @@
 **/__pycache__
 **/unity-environment.log
 Project_Navigation/environment/Banana_Linux*
-Project_Continuous_Control/environment/Reacher*
+Project_ContinuousControl/environment/Reacher*
 **/runs
 *.code-workspace
 **/unityagents.egg-info
