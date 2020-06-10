@@ -2,13 +2,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .hyperparameters import DNN_ARCHITECTURE
+from agent.hyperparameters import DNN_ARCHITECTURE
 
 
-class QNetwork(nn.Module):
-    """Actor (Policy) Model."""
+class PolicyNetwork(nn.Module):
+    """DNN for the policy"""
 
-    def __init__(self, state_size, action_size, seed=0, hidden_layers=DNN_ARCHITECTURE, dueling=False):
+    def __init__(self, state_size, action_size, seed=0, hidden_layers=DNN_ARCHITECTURE):
         """Initialize parameters and build model.
         Params
         ======
@@ -17,9 +17,8 @@ class QNetwork(nn.Module):
             seed (int): Random seed
             hidden_layers (list[int]): Size of fully connected hidden layers
         """
-        super(QNetwork, self).__init__()
+        super(PolicyNetwork, self).__init__()
         self.seed = torch.manual_seed(seed)
-        self.dueling = dueling
 
         assert(len(hidden_layers) > 0), "Must specify at least a single hidden layer for the neutral network."
 
@@ -33,20 +32,12 @@ class QNetwork(nn.Module):
         self.hidden_layers = nn.ModuleList(self.hidden_layers)
 
         # Output layer
-        if self.dueling:
-            self.output_value_layer = nn.Linear(hidden_layers[-1], 1)
-            self.output_advantage_layer = nn.Linear(hidden_layers[-1], action_size)
-        else:
-            self.output_layer = nn.Linear(hidden_layers[-1], action_size)
+        self.output_layer_mean = nn.Linear(hidden_layers[-1], action_size)
+        self.output_layer_var = nn.Linear(hidden_layers[-1], action_size)
 
     def forward(self, state):
         """Build a network that maps state -> action values."""
         x = F.relu(self.input_layer(state))
         for hidden_layer in self.hidden_layers:
             x = F.relu(hidden_layer(x))
-        if self.dueling:
-            value = self.output_value_layer(x)
-            advantage = self.output_advantage_layer(x)
-            return value + advantage - advantage.mean()
-        else:
-            return self.output_layer(x)
+        return F.tanh(self.output_layer_mean(x)), F.softplus(self.output_layer_var(x))
