@@ -5,4 +5,5 @@ Project_ContinuousControl/environment/Reacher*
 **/runs
 *.code-workspace
 **/unityagents.egg-info
+**/.eggs
 .vscode

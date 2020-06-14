@@ -108,7 +108,7 @@ if __name__ == "__main__":
     default_weights = os.path.join(os.path.dirname(os.path.realpath(__file__)), "weights.pth")
     parser.add_argument("-s", "--save_parameters", type=str, default=default_weights,
                         help="Path to file where the parameters from training the agent should be saved to.")
-    parser.add_argument("-l", "--load_parameters", default=default_weights,
+    parser.add_argument("-l", "--load_parameters", type=str, default=default_weights,
                         help="Load the agent with the given parameters/weights for the neural network.")
     parser.add_argument("-o", "--options", nargs="*", type=str, choices=["double", "priority_replay", "dueling"],
                         help="Specfiy additional options which extend the basic DQN algorithm. Possible options: "

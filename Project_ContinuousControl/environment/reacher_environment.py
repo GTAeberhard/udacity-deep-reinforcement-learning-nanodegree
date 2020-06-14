@@ -23,11 +23,13 @@ class ReacherEnvironment:
 
     def reset(self):
         env_info = self.env.reset(train_mode=self.training_mode)[self.brain_name]
-        return env_info.vector_observations[0]
+        self.num_agents = len(env_info.agents)
+        return env_info.vector_observations
 
-    def step(self, action):
-        env_info = self.env.step(action)[self.brain_name]
-        next_state = env_info.vector_observations[0]
-        reward = env_info.rewards[0]
-        done = env_info.local_done[0]
-        return (next_state, reward, done)
+    def step(self, actions):
+        env_info = self.env.step(actions)[self.brain_name]
+        next_states = env_info.vector_observations
+        rewards = env_info.rewards
+        rewards = [0.1 if r > 0 else 0 for r in rewards]
+        dones = env_info.local_done
+        return (next_states, rewards, dones)
