@@ -37,7 +37,8 @@ def download_reacher_environment():
     if not os.path.isdir("environment/ReacherMultiAgent_Linux"):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/Reacher_Linux.zip",
                                  "environment")
-        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux", "environment/ReacherMultiAgent_Linux"))
+        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux"),
+                    os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux"))
         assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux")))
         set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux/Reacher.x86"))
         set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux/Reacher.x86_64"))
