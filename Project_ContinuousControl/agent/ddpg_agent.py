@@ -95,12 +95,8 @@ class DDPGAgent():
         if not (len(self.memory) > BATCH_SIZE and self.steps % STEPS_BETWEEN_LEARNING == 0):
             return
 
-        for i in range(LEARNING_ITERATIONS):
+        for _ in range(LEARNING_ITERATIONS):
             states, actions, rewards, next_states, dones = self.memory.sample()
-
-            # TODO: Try to remove this?
-            if rewards.sum() < 0.05:
-                continue
 
             # ---------------------------- update critic ---------------------------- #
             # Get predicted next-state actions and Q values from target models
@@ -114,7 +110,7 @@ class DDPGAgent():
             # Minimize the loss
             self.optimizer_critic.zero_grad()
             critic_loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.critic_network.parameters(), GRADIENT_CLIPPING_MAX)
+            torch.nn.utils.clip_grad_value_(self.critic_network.parameters(), GRADIENT_CLIPPING_MAX)
             self.optimizer_critic.step()
 
             # ---------------------------- update actor ---------------------------- #
@@ -124,7 +120,6 @@ class DDPGAgent():
             # Minimize the loss
             self.optimizer_actor.zero_grad()
             actor_loss.backward()
-            # torch.nn.utils.clip_grad_norm_(self.critic_network.parameters(), GRADIENT_CLIPPING_MAX)
             self.optimizer_actor.step()
 
             # ----------------------- update target networks ----------------------- #

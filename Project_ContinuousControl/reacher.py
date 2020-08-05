@@ -11,16 +11,26 @@ from environment.reacher_environment import ReacherEnvironment
 DEFAULT_N_EPISODES_TRAINING = 500
 SCORING_WINDOW = 100
 PRINT_INTERVAL = 10
-DEFAULT_NETWORK_WEIGHTS_FILENAMES = ["actor_weights.pth", "critic_weights.pth"]
+DEFAULT_NETWORK_WEIGHTS_FILENAMES = ["weights_actor.pth", "weights_critic.pth"]
 
 class Reacher:
-    def __init__(self, agent_type, training_mode=False, headless=False, multiagent=False):
+    def __init__(self, agent_type, training_mode=False, headless=False, multiagent=False, device=None):
         self.train = training_mode
         self.env = ReacherEnvironment(training_mode=self.train, headless=headless, multiagent=multiagent)
+
+        if device == "cuda":
+            self.device = torch.device("cuda:0")
+        elif device == "cpu":
+            self.device = torch.device("cpu")
+        else:
+            self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
         if agent_type == "a2c":
-            self.agent = A2CAgent(self.env.state_size, self.env.action_size, train=self.train, seed=0)
+            self.agent = A2CAgent(self.env.state_size, self.env.action_size, train=self.train, seed=0,
+                                  device=self.device)
         elif agent_type == "ddpg":
-            self.agent = DDPGAgent(self.env.state_size, self.env.action_size, train=self.train, seed=0)
+            self.agent = DDPGAgent(self.env.state_size, self.env.action_size, train=self.train, seed=0,
+                                   device=self.device)
         else:
             raise ValueError("Agent {} is unsupported. Choices are: ddpg, a2c.".format(agent_type))
 
@@ -45,8 +55,9 @@ class Reacher:
             if any(dones):
                 return mean(scores)
 
-    def train_agent(self, num_episodes=DEFAULT_N_EPISODES_TRAINING, output_actor_weights_file="actor_weights.pth",
-                    output_critic_weights_file="critic_weights.pth", name=None):
+    def train_agent(self, num_episodes=DEFAULT_N_EPISODES_TRAINING,
+                    output_actor_weights_file=DEFAULT_NETWORK_WEIGHTS_FILENAMES[0],
+                    output_critic_weights_file=DEFAULT_NETWORK_WEIGHTS_FILENAMES[1], name=None):
         scores = []
         environment_solved = False
 
@@ -58,20 +69,20 @@ class Reacher:
             score = episode_score
             scores.append(score)
 
+            mean_score = np.mean(scores[-SCORING_WINDOW:])
             writer.add_scalar("Score", score, i_episode)
-            writer.add_scalar("Mean_Score", np.mean(scores[-SCORING_WINDOW:]), i_episode)
+            writer.add_scalar("Mean_Score", mean_score, i_episode)
             writer.add_scalar("Actor_Loss", self.agent.last_actor_loss, i_episode)
             writer.add_scalar("Critic_Loss", self.agent.last_critic_loss, i_episode)
 
-            if np.mean(scores[-SCORING_WINDOW:]) >= 30 and not environment_solved:
-                episode_solved = i_episode - SCORING_WINDOW
-                print("Environment solved in {} episodes!".format(episode_solved))
+            if mean_score >= 30 and not environment_solved:
+                print("Environment solved in {} episodes!".format(i_episode))
                 environment_solved = True
-                self.save_weights("{}_solved_e{}".format(output_actor_weights_file, episode_solved),
-                                  "{}_solved_e{}".format(output_critic_weights_file, episode_solved))
+                self.save_weights("{}_solved_e{}".format(output_actor_weights_file, i_episode),
+                                  "{}_solved_e{}".format(output_critic_weights_file, i_episode))
 
             if i_episode % PRINT_INTERVAL == 0:
-                print("Episode {} -- Average Score: {}".format(i_episode, np.mean(scores[-SCORING_WINDOW:])))
+                print("Episode {} -- Average Score: {}".format(i_episode, mean_score))
 
         self.save_weights(output_actor_weights_file, output_critic_weights_file)
 
@@ -81,13 +92,30 @@ class Reacher:
 
     def load_weights(self, actor_weights_file_name, critic_weights_file_name):
         if self.agent.device.type == "cpu":
-            self.agent.actor_network.load_state_dict(torch.load(actor_weights_file_name, map_location="cpu"))
+            try:
+                self.agent.actor_network.load_state_dict(torch.load(actor_weights_file_name, map_location="cpu"))
+            except Exception:
+                print("Could not load actor network weights from {}. Network will be initialized with random "
+                      "weights.".format(actor_weights_file_name))
             if self.agent.critic_network:
-                self.agent.critic_network.load_state_dict(torch.load(critic_weights_file_name, map_location="cpu"))
+                try:
+                    self.agent.critic_network.load_state_dict(torch.load(critic_weights_file_name, map_location="cpu"))
+                except Exception:
+                    print("Could not load critic network weights from {}. Network will be initialized with random "
+                          "weights.".format(critic_weights_file_name))
         else:
-            self.agent.actor_network.load_state_dict(torch.load(actor_weights_file_name))
+            try:
+                self.agent.actor_network.load_state_dict(torch.load(actor_weights_file_name))
+            except Exception:
+                print("Could not load actor network weights from {}. Network will be initialized with random "
+                      "weights.".format(actor_weights_file_name))
             if self.agent.critic_network:
-                self.agent.critic_network.load_state_dict(torch.load(critic_weights_file_name))
+                try:
+                    self.agent.critic_network.load_state_dict(torch.load(critic_weights_file_name))
+                except Exception:
+                    print("Could not load critic network weights from {}. Network will be initialized with random "
+                          "weights.".format(critic_weights_file_name))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A Deep Reinforcement Learning agent, or group of agents, which "
@@ -127,6 +155,6 @@ if __name__ == "__main__":
         reacher.load_weights(actor_weights_file_name=args.load_parameters[0],
                              critic_weights_file_name=args.load_parameters[1])
         score = reacher.play_episode()
-        print("Score: {.2f}".format(score))
+        print("Score: {:.2f}".format(score))
 
     reacher.close()

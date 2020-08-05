@@ -5,7 +5,7 @@ import torch
 from torch.distributions import Normal
 
 from .hyperparameters import LEARNING_RATE, GAMMA, BELLMAN_STEPS, ENTROPY_COEFFICIENT, GRADIENT_CLIPPING_MAX
-from .network import A2CActorNetwork, A2CCriticNetwork, A2CActorCriticNetwork
+from .network import A2CActorNetwork, A2CCriticNetwork
 
 
 class A2CAgent():
@@ -18,8 +18,6 @@ class A2CAgent():
         self.train = train
         self.last_actor_loss = None
         self.last_critic_loss = None
-        self.actor_grads = None
-        self.critic_grads = None
 
         if device is None:
             self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -28,8 +26,6 @@ class A2CAgent():
 
         self.actor_network = A2CActorNetwork(self.state_size, self.action_size).to(self.device)
         self.critic_network = A2CCriticNetwork(self.state_size).to(self.device)
-
-        self.actor_critic_network = A2CActorCriticNetwork(self.state_size, self.action_size).to(self.device)
 
         if self.train:
             self.optimizer_actor = torch.optim.Adam(self.actor_network.parameters(), lr=LEARNING_RATE)
@@ -108,17 +104,11 @@ class A2CAgent():
         self.optimizer_actor.zero_grad()
         policy_entropy_loss.backward()
         torch.nn.utils.clip_grad_norm_(self.actor_network.parameters(), GRADIENT_CLIPPING_MAX)
-        self.actor_grads = np.concatenate(
-            [p.grad.data.cpu().numpy().flatten() for p in self.actor_network.parameters() if p.grad is not None]
-        )
         self.optimizer_actor.step()
 
         self.optimizer_critic.zero_grad()
         value_loss.backward()
         torch.nn.utils.clip_grad_norm_(self.critic_network.parameters(), GRADIENT_CLIPPING_MAX)
-        self.critic_grads = np.concatenate(
-            [p.grad.data.cpu().numpy().flatten() for p in self.critic_network.parameters() if p.grad is not None]
-        )
         self.optimizer_critic.step()
 
         self.reset()

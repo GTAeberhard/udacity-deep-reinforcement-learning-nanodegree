@@ -61,7 +61,7 @@ $ python banana_navigation.py --help
 
 The default mode of the application is to do a single episode of the environment in inference mode, which simply runs
 the environment with the currently trained agent. By default, the neural network weights from the file `weights.pth`
-are loaded. If this file does not exist, the neural network are simply initialized to random values.
+are loaded. If this file does not exist, the neural network is simply initialized to random values.
 
 The following command can be used to specify your own neural network parameters, which is useful for seeing the
 inference performance of differently trained networks.
