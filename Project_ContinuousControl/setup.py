@@ -14,6 +14,8 @@ def download_reacher_environment():
     import stat
     import zipfile
 
+    CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
+
     def download_and_extract_zip(url, target_folder):
         r = requests.get(url)
         z = zipfile.ZipFile(io.BytesIO(r.content))
@@ -23,37 +25,40 @@ def download_reacher_environment():
         st = os.stat(file)
         os.chmod(file, st.st_mode | stat.S_IEXEC)
 
-    if not os.path.isdir("environment/ReacherSingleAgent_Linux"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Linux.zip",
                                  "environment")
-        shutil.move("environment/Reacher_Linux", "environment/ReacherSingleAgent_Linux")
-        assert(os.path.isdir("environment/ReacherSingleAgent_Linux"))
-        set_execute_permissions("environment/ReacherSingleAgent_Linux/Reacher.x86")
-        set_execute_permissions("environment/ReacherSingleAgent_Linux/Reacher.x86_64")
+        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux"),
+                    os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux"))
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux/Reacher.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux/Reacher.x86_64"))
 
     if not os.path.isdir("environment/ReacherMultiAgent_Linux"):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/Reacher_Linux.zip",
                                  "environment")
-        shutil.move("environment/Reacher_Linux", "environment/ReacherMultiAgent_Linux")
-        assert(os.path.isdir("environment/ReacherMultiAgent_Linux"))
-        set_execute_permissions("environment/ReacherMultiAgent_Linux/Reacher.x86")
-        set_execute_permissions("environment/ReacherMultiAgent_Linux/Reacher.x86_64")
+        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux", "environment/ReacherMultiAgent_Linux"))
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux/Reacher.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux/Reacher.x86_64"))
 
-    if not os.path.isdir("environment/ReacherSingleAgent_Linux_NoVis"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux_NoVis")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/one_agent/Reacher_Linux_NoVis.zip",
                                  "environment")
-        shutil.move("environment/Reacher_Linux_NoVis", "environment/ReacherSingleAgent_Linux_NoVis")
-        assert(os.path.isdir("environment/ReacherSingleAgent_Linux_NoVis"))
-        set_execute_permissions("environment/ReacherSingleAgent_Linux_NoVis/Reacher.x86")
-        set_execute_permissions("environment/ReacherSingleAgent_Linux_NoVis/Reacher.x86_64")
+        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux_NoVis"),
+                    os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux_NoVis"))
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux_NoVis")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux_NoVis/Reacher.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherSingleAgent_Linux_NoVis/Reacher.x86_64"))
 
-    if not os.path.isdir("environment/ReacherMultiAgent_Linux_NoVis"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux_NoVis")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Reacher/Reacher_Linux_NoVis.zip",
                                  "environment")
-        shutil.move("environment/Reacher_Linux_NoVis", "environment/ReacherMultiAgent_Linux_NoVis")
-        assert(os.path.isdir("environment/ReacherMultiAgent_Linux_NoVis"))
-        set_execute_permissions("environment/ReacherMultiAgent_Linux_NoVis/Reacher.x86")
-        set_execute_permissions("environment/ReacherMultiAgent_Linux_NoVis/Reacher.x86_64")
+        shutil.move(os.path.join(CURRENT_PATH, "environment/Reacher_Linux_NoVis"),
+                    os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux_NoVis"))
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux_NoVis")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux_NoVis/Reacher.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/ReacherMultiAgent_Linux_NoVis/Reacher.x86_64"))
 
 
 class CustomInstallCommand(install):

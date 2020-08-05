@@ -14,6 +14,8 @@ def download_banana_environment():
     import stat
     import zipfile
 
+    CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
+
     def download_and_extract_zip(url, target_folder):
         r = requests.get(url)
         z = zipfile.ZipFile(io.BytesIO(r.content))
@@ -23,27 +25,28 @@ def download_banana_environment():
         st = os.stat(file)
         os.chmod(file, st.st_mode | stat.S_IEXEC)
 
-    if not os.path.isdir("environment/Banana_Linux"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux.zip",
                                  "environment")
-        assert(os.path.isdir("environment/Banana_Linux"))
-        set_execute_permissions("environment/Banana_Linux/Banana.x86")
-        set_execute_permissions("environment/Banana_Linux/Banana.x86_64")
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux/Banana.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux/Banana.x86_64"))
 
-    if not os.path.isdir("environment/Banana_Linux_NoVis"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux_NoVis.zip",
                                  "environment")
-        assert(os.path.isdir("environment/Banana_Linux_NoVis"))
-        set_execute_permissions("environment/Banana_Linux_NoVis/Banana.x86")
-        set_execute_permissions("environment/Banana_Linux_NoVis/Banana.x86_64")
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis/Banana.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis/Banana.x86_64"))
 
-    if not os.path.isdir("environment/Banana_Linux_Pixels"):
+    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels")):
         download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Linux.zip",
                                  "environment")
-        shutil.move("environment/VisualBanana_Linux", "environment/Banana_Linux_Pixels")
-        assert(os.path.isdir("environment/Banana_Linux_Pixels"))
-        set_execute_permissions("environment/Banana_Linux_Pixels/Banana.x86")
-        set_execute_permissions("environment/Banana_Linux_Pixels/Banana.x86_64")
+        shutil.move(os.path.join(CURRENT_PATH, "environment/VisualBanana_Linux"),
+                    os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels"))
+        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels")))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels/Banana.x86"))
+        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels/Banana.x86_64"))
 
 
 class CustomInstallCommand(install):
