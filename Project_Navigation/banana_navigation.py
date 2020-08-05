@@ -5,11 +5,11 @@ import numpy as np
 from collections import deque
 from tensorboardX import SummaryWriter
 
-from environment.banana_environmet import BananaEnvironment
-from agent.dqn_agent import DqnAgent
-from agent.human_agent import HumanAgent
-from agent.q_network import QNetwork
-from agent.hyperparameters import INITIAL_BETA, BETA_STEPS
+from .environment.banana_environmet import BananaEnvironment
+from .agent.dqn_agent import DqnAgent
+from .agent.human_agent import HumanAgent
+from .agent.q_network import QNetwork
+from .agent.hyperparameters import INITIAL_BETA, BETA_STEPS
 
 DEFAULT_N_EPISODES_TRAINING = 1000
 SCORING_WINDOW = 100

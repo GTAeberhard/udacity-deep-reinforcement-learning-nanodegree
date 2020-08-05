@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from reacher import Reacher
+from .reacher import Reacher
 
 
 class ReacherInferenceTest(unittest.TestCase):
