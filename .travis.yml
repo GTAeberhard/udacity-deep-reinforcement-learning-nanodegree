@@ -21,8 +21,8 @@ before_install:
   - pip install -U protobuf
 
 install:
-  - pip install Project_Navigation
-  - pip install Project_ContinuousControl
+  - pip install ./Project_Navigation
+  - pip install ./Project_ContinuousControl
 
 script:
   - pytest
