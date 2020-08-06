@@ -25,7 +25,8 @@ will install of the required Python dependencies and download the required Unity
 from Udacity. As a pre-requisite, Python 3 must be installed on your system.
 
 ```
-$ pip install -e .
+$ pip install .
+$ python ./environment/download_environment.py
 ```
 
 Once this command executes, it should be possible to immediately run the application as described below.

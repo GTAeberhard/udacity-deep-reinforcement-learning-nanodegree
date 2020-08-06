@@ -1,73 +1,6 @@
 #!/usr/bin/env python
 
 from setuptools import setup, Command, find_packages
-from setuptools.command.install import install
-from setuptools.command.develop import develop
-from setuptools.command.egg_info import egg_info
-
-
-def download_banana_environment():
-    import io
-    import os
-    import requests
-    import shutil
-    import stat
-    import zipfile
-
-    CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
-
-    def download_and_extract_zip(url, target_folder):
-        r = requests.get(url)
-        z = zipfile.ZipFile(io.BytesIO(r.content))
-        z.extractall(target_folder)
-
-    def set_execute_permissions(file):
-        st = os.stat(file)
-        os.chmod(file, st.st_mode | stat.S_IEXEC)
-
-    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux")):
-        download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux.zip",
-                                 "environment")
-        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux")))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux/Banana.x86"))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux/Banana.x86_64"))
-
-    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis")):
-        download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux_NoVis.zip",
-                                 "environment")
-        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis")))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis/Banana.x86"))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_NoVis/Banana.x86_64"))
-
-    if not os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels")):
-        download_and_extract_zip("https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/VisualBanana_Linux.zip",
-                                 "environment")
-        shutil.move(os.path.join(CURRENT_PATH, "environment/VisualBanana_Linux"),
-                    os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels"))
-        assert(os.path.isdir(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels")))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels/Banana.x86"))
-        set_execute_permissions(os.path.join(CURRENT_PATH, "environment/Banana_Linux_Pixels/Banana.x86_64"))
-
-
-class CustomInstallCommand(install):
-    def run(self):
-        install.run(self)
-        import requests
-        download_banana_environment()
-
-
-class CustomDevelopCommand(develop):
-    def run(self):
-        develop.run(self)
-        import requests
-        download_banana_environment()
-
-
-class CustomEggInfoCommand(egg_info):
-    def run(self):
-        egg_info.run(self)
-        import requests
-        download_banana_environment()
 
 
 with open("requirements.txt") as f:
@@ -84,11 +17,6 @@ setup(
     packages=find_packages(),
     install_requires=required,
     setup_requires="requests",
-    cmdclass={
-        "install": CustomInstallCommand,
-        "egg_info": CustomEggInfoCommand,
-        "develop": CustomDevelopCommand
-    },
     long_description=("Unity Machine Learning Agents allows researchers and developers "
                       "to transform games and simulations created using the Unity Editor into environments "
                       "where intelligent agents can be trained using reinforcement learning, evolutionary "

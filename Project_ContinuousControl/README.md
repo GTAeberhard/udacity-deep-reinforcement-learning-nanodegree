@@ -16,11 +16,12 @@ environment, the average over all 20 agents per episode is used).
 ## Installation
 
 Check out the repository and navigate into this project's root folder (`cd Project_ContinuousControl`). A simple 
-install script is provided which installs all necessary Python dependencies and downloads the required Unity
-environments.  As a pre-requisite, Python 3 must be installed on your system.
+install script is provided which installs all necessary Python dependencies and another script which downloads the
+required Unity environments.  As a pre-requisite, Python 3 must be installed on your system.
 
 ```
-$ pip install -e .
+$ pip install .
+$ python ./environment/download_environment.py
 ```
 
 Once this command executes, it should be possible to immediately run the application as described below. Note that it
