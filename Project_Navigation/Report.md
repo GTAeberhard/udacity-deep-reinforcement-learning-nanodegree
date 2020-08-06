@@ -23,7 +23,7 @@ Nanodegree.
 
 ![](https://video.udacity-data.com/topher/2018/June/5b1ab4b0_banana/banana.gif)
 
-For this project, an agent is trained to naviate a large, square world with the goal of collecting bananas.
+For this project, an agent is trained to navigate a large, square world with the goal of collecting bananas.
 
 A reward of +1 is provided for collecting a yellow banana, and a reward of -1 is provided for collecting a blue banana.
 Thus, the goal of the agent is to collect as many yellow bananas as possible while avoiding blue bananas.
@@ -72,7 +72,7 @@ solved for this project, a continuous state space of 37 dimensions is given, whi
 challenging to solve this problem with traditional Q-Learning methods.
 
 In a [Deep Q-Network](https://www.nature.com/articles/nature14236) (DQN) agent, a neural network is used as a function
-approximator for transalting on input state space to an output of state-action values. Typically for a given state, the
+approximator for translating on input state space to an output of state-action values. Typically for a given state, the
 neural networks outputs a state-action value (Q-value) for all possible actions, of which the maximum state-action value
 is chosen. Such a neural network in this context is called a Q-Network. The loss function for training such a network is
 the mean square of the TD error w.r.t. to some target network.
@@ -83,7 +83,7 @@ whose parameters are fixed for several learning iterations, where its parameters
 learned Q-network's parameters. This is done in order to avoid instabilities due to correlations between the learned
 and target networks. Second is that the Q-networks parameters are not updated with the immediate experience while acting
 on an environment, but rather it is updated using an experience replay buffer from which samples are drawn randomly,
-effectively turning the reinforement learning problem into a well studied supervised learning problem, where previous
+effectively turning the reinforcement learning problem into a well studied supervised learning problem, where previous
 experiences (the state, action, reward, and next-state tuple) become the "labels" for training. The final basic
 Deep Q-Learning update equation for changing the neural network's weights is
 
@@ -118,12 +118,12 @@ layers of a neural network, as shown below:
 ![](img/dueling_network.png)
 
 The basic DQN network is shown in the top part of the figure and the dueling DQN architecture in the bottom part.
-Instead of learning the state-action values, the dueling network seprately learns the state value function as well
+Instead of learning the state-action values, the dueling network separately learns the state value function as well
 as the advantage function, defined as
 
 ![](img/eq_dueling_network.png)
 
-where the state-action value is simply the sum of the advantage function and the state-value function. This architcture
+where the state-action value is simply the sum of the advantage function and the state-value function. This architecture
 enables the learning of the state value function, which is independent of any action taken, allowing the network to
 learn if it is valuable to be in a given state, regardless of the action taken from that state. For the banana
 navigation environment, this could for example be the difference between choosing action left or right, where in some
@@ -131,7 +131,7 @@ cases it does not matter which action is taken, i.e. to avoid a blue banana.
 
 ### Priority Experience Replay
 
-The experience replay mechanism in the basic DQN algorithm samples uniformely from the experience buffer. However,
+The experience replay mechanism in the basic DQN algorithm samples uniformly from the experience buffer. However,
 this may be sub-optimal, since some experience are more valuable than others in terms of learning. The method of
 [Prioritzed Experience Replay](https://arxiv.org/abs/1511.05952) makes an improvement in this regard by using a priority
 mechanism for sampling experiences in a non-uniform manner. Usually, the TD error is used an indication of experience
@@ -206,7 +206,7 @@ in the table below.
 ## Training Results
 
 The DQN agent was trained in the banana navigation environment using five different variants of the algorithm, all with
-the hyperparemeters described above. The number of episodes required to solve the environment (a mean score of 13 for 100
+the hyperparameters described above. The number of episodes required to solve the environment (a mean score of 13 for 100
 consecutive episodes), along with the weights file for the trained network, is shown in the table below.
 
 | DQN Algorithm                        | Episodes to Solve  | Weights File                   |
@@ -228,7 +228,7 @@ The plot below shows the score per episode as well as the mean score over 100 ep
 
 At the end of training, all algorithm variants converge to achieving a mean score over 100 episodes of roughly 16.
 
-The banana navigation environment itself may be too simple of an environment to warant much of a difference between the
+The banana navigation environment itself may be too simple of an environment to warrant much of a difference between the
 DQN algorithm variants, which could be an explanation for the roughly similar convergence dynamics during the training
 process. It is also important to note that the Priority Experience Replay implementation is quite slow since a deque
 data structure was used instead of something more efficient like the sum-tree, as suggested in the paper. Furthermore,

@@ -27,7 +27,8 @@ install:
   - python ./Project_ContinuousControl/environment/download_environment.py
 
 script:
-  - pytest
+  - python -m pytest ./Project_Navigation
+  - python -m pytest ./Project_ContinuousControl
 
 notifications:
   email: false

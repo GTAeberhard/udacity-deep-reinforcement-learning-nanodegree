@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from .banana_navigation import BananaNavigation
+from banana_navigation import BananaNavigation
 
 
 class BananaNavigationInferenceTest(unittest.TestCase):

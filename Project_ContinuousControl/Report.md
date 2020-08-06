@@ -5,6 +5,19 @@ Author: Michael Aeberhard
 This report summarizes the results of the second project, _Continuous Control_, of the Udacity Deep Reinforcement
 Learning Nanodegree.
 
+- [Project Report](#project-report)
+  * [The Reacher Environment](#the-reacher-environment)
+  * [Introduction to Policy-Based Methods](#introduction-to-policy-based-methods)
+  * [Actor-Critic Methods](#actor-critic-methods)
+    + [Advantage Actor-Critic (A2C)](#advantage-actor-critic--a2c-)
+    + [Deep Deterministic Policy Gradient (DDPG)](#deep-deterministic-policy-gradient--ddpg-)
+  * [Project Implementation Details](#project-implementation-details)
+    + [Source Code Organization](#source-code-organization)
+    + [Neural Network Architecture](#neural-network-architecture)
+    + [Hyperparameters](#hyperparameters)
+  * [Training Results](#training-results)
+  * [Ideas for Future Work](#ideas-for-future-work)
+
 ## The Reacher Environment
 
 For this project, an agent with a two-jointed arm is trained to move the end of its arm into a moving target position
@@ -175,11 +188,26 @@ in the table below.
 
 ## Training Results
 
+The Deep Deterministic Policy Gradient (DDPG) agent was trained in the multi-agent version of the reacher environment
+for a total of 500 episodes. It took __98__ episodes to solve the environment.
+
+The plots below show the mean score over 100 episodes (calculated at each episode), the raw score of each episode, and
+the actor and critic loss values during training. The required score of 30 for solving the environment is shown as a
+green horizontal line.
+
+![](img/results.png)
+
 Note that only the DDPG implementation was successful at solving the environment. The A2C algorithm, as implemented,
 was not able to converge to a solution.
 
 ## Ideas for Future Work
 
-* Tuning of parameters (see critic loss)
-* PPO: https://arxiv.org/abs/1707.06347
-* D4PG: https://arxiv.org/abs/1804.08617
+The following are some ideas on how to potentially improve the agent's performance:
+
+* Tune the hyperparameters and the neural network architecture. Currently the parameters are a pretty good initial guess
+  for getting a working agent. However, more rigor could be used to find the optimal hyperparameters for the agent, for
+  example using grid search. In particular the critic's loss is often a bit unstable; this would be a first area to
+  investigate to improve the hyperparameters or improve the neural network's architecture.
+* Implement other algorithm in order to compare performance, for example:
+  * [Proximal Policy Optimization](https://arxiv.org/abs/1707.06347)
+  * [Distributed Distributional Deterministic Policy Gradients (D4PG)](https://arxiv.org/abs/1804.08617)

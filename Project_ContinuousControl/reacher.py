@@ -4,9 +4,9 @@ import numpy as np
 from statistics import mean
 from tensorboardX import SummaryWriter
 
-from .agent.a2c_agent import A2CAgent
-from .agent.ddpg_agent import DDPGAgent
-from .environment.reacher_environment import ReacherEnvironment
+from agent.a2c_agent import A2CAgent
+from agent.ddpg_agent import DDPGAgent
+from environment.reacher_environment import ReacherEnvironment
 
 DEFAULT_N_EPISODES_TRAINING = 500
 SCORING_WINDOW = 100
