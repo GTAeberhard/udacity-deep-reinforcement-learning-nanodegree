@@ -25,10 +25,13 @@ install:
   - python ./Project_Navigation/environment/download_environment.py
   - pip install ./Project_ContinuousControl
   - python ./Project_ContinuousControl/environment/download_environment.py
+  - pip install ./Project_CollaborationCompetition
+  - python ./Project_CollaborationCompetition/environment/download_environment.py
 
 script:
   - python -m pytest ./Project_Navigation
   - python -m pytest ./Project_ContinuousControl
+  - python -m pytest ./Project_CollaborationCompetition
 
 notifications:
   email: false

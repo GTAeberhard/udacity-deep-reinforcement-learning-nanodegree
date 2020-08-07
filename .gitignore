@@ -2,6 +2,7 @@
 **/unity-environment.log
 Project_Navigation/environment/Banana_Linux*
 Project_ContinuousControl/environment/Reacher*
+Project_CollaborationCompetition/environment/Tennis*
 **/runs
 *.code-workspace
 **/unityagents.egg-info
