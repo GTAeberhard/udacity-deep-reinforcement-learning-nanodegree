@@ -15,18 +15,37 @@ environment, the average over all 20 agents per episode is used).
 
 ## Installation
 
-Check out the repository and navigate into this project's root folder (`cd Project_ContinuousControl`). A simple 
-install script is provided which installs all necessary Python dependencies and another script which downloads the
-required Unity environments.  As a pre-requisite, Python 3 must be installed on your system.
+After checking out the repository, navigate to the Continuous Control project's folder.
+
+```
+$ cd Project_ContinuousControl
+```
+
+It is recommended to setup a [`virtualenv`](https://docs.python-guide.org/dev/virtualenvs/) environment for this project
+so that only the required dependencies are installed and your system's Python setup remains untouched. The following
+steps will setup such an environment and activate it.
+
+```
+$ virtualenv -p /usr/bin/python3.6 venv
+$ source ./venv/bin/activate
+```
+
+To deactivate the virtual environment later, simply execute the command `deactivate`.
+
+In order to install all of the required dependencies to run the project, install the project using pip, and then run an additional script which downloads the required Unity environments.
 
 ```
 $ pip install .
 $ python ./environment/download_environment.py
 ```
 
-Once this command executes, it should be possible to immediately run the application as described below. Note that it
-is recommended to setup a [`virtualenv`](https://docs.python-guide.org/dev/virtualenvs/) environment for this project
-so that only the required dependencies are installed and your system's Python setup remains untouched.
+It should now be possible to immediately run the application as described below. To verify that
+everything works, you can run the unit tests for the reacher environment, which will run the trained agent once on
+both the single agent and multi agent versions of the environment and verify that a score larger than 30 was achieved.
+
+```
+$ python -m pytest
+```
 
 ## User Instructions
 
