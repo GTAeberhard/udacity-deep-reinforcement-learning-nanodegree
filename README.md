@@ -13,3 +13,9 @@ instructions on how to setup your python environment and run the project.
 
 Please see the [README](Project_ContinuousControl/README.md) for the continuous control project
 for detailed instructions on how to setup your python environment and run the project.
+
+## Project Collaboration and Competition
+
+Please see the [README](Project_CollaborationCompetition/README.md) for the collaboration and
+competition project for detailed instructions on how to setup your python environment and run
+the project.
