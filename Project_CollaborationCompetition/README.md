@@ -1,4 +1,4 @@
-# Project 2: Collaboration and Competition
+# Project 3: Collaboration and Competition
 
 ## Introduction
 
@@ -140,5 +140,5 @@ The keyboard controls for both agents are summarized in the table below.
 
 ## Results
 
-For detailed results on how this environment was solved using multi-agentActor-Critic methods, please refer to the
+For detailed results on how this environment was solved using multi-agent Actor-Critic methods, please refer to the
 [Project Report](Report.md).
