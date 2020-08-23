@@ -1,10 +1,10 @@
-""""
+"""
 Script which downloads the necessary Unity environments from the Udacity AWS servers
 which are required for working with this project.
 
 Simply run this script from the command line with a Python interpreter and the
 necessary files will be downloaded to the 'environment' folder.
-""""
+"""
 import io
 import os
 import requests
