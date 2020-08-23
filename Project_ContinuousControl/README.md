@@ -98,7 +98,7 @@ In order to train a new agent, the training mode of the application must be acti
 command:
 
 ```
-$ python reacher.py --mode train
+$ python reacher.py --train
 ```
 
 This will train an actor-critic agent to solve the reacher environment and save the weights of the actor and critic
@@ -118,8 +118,9 @@ directory. In order to view the results on TensorBoard, run
 $ tensorboard --logdir runs
 ```
 
-In order to specficy a custom name for the TensorBoard run, use the `--name` option.
+In order to specify a custom name for the TensorBoard run, use the `--name` option.
 
 ## Results
 
-For detailed results on how this environment was solved using Actor-Critic methods, please refer to the [Project Report](Report.md).
+For detailed results on how this environment was solved using Actor-Critic methods, please refer to the
+[Project Report](Report.md).

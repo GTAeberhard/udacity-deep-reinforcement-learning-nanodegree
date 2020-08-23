@@ -76,7 +76,7 @@ network's loss function to weigh the action log probabilities and favor actions 
 ### Deep Deterministic Policy Gradient (DDPG)
 
 A2C is an on-policy method, which has some disadvantages for training converges. The
-[Deep Deterministic Policy Gradient(DDPG)](https://arxiv.org/abs/1509.02971) algorithm is an off-policy method which is
+[Deep Deterministic Policy Gradient (DDPG)](https://arxiv.org/abs/1509.02971) algorithm is an off-policy method which is
 closely related to Q-Learning and can be loosely thought of as a continuous action-space version of Q-Learning.
 Both of the "tricks" in Q-Learning (replay buffer and target networks) are used in DDPG to achieve a more efficient
 actor-critic method in terms of training efficiency.
